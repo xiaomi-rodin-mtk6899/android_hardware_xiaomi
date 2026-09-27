@@ -392,11 +392,13 @@ void Session::notify(const fingerprint_msg_t* msg) {
             ALOGD("onEnrollResult(fid=%d, rem=%d)", msg->data.enroll.finger.fid,
                   msg->data.enroll.samples_remaining);
 #endif
-            mCb->onEnrollmentProgress(msg->data.enroll.finger.fid,
-                                      msg->data.enroll.samples_remaining);
             if (msg->data.enroll.samples_remaining == 0 && mUdfpsHandler) {
+                mUdfpsHandler->cancel();
                 mUdfpsHandler->onFingerUp();
             }
+
+            mCb->onEnrollmentProgress(msg->data.enroll.finger.fid,
+                                      msg->data.enroll.samples_remaining);
         } break;
         case FINGERPRINT_TEMPLATE_REMOVED: {
 #ifndef IMPL_V2
